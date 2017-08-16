@@ -1,0 +1,115 @@
+<html>
+    <title>BE Project</title>
+        <link href="/assets/styles.css" rel="stylesheet" type="text/css" media=screen />
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.js"
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous">
+        </script>
+        <meta http-equiv="refresh" content="10" >
+        <script type="text/javascript" src="/assets/checkbox.js" ></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawGauge);
+
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Time', 'Water Used'],
+                    <%for(var i=0; i<datas.length; i++){%>
+                    [new Date('<%= datas[i].created_at %>'), <%= datas[i].waterUsed %> ],
+                    <%}%>
+             ]);
+
+                var options = {
+                    'title':'Water Usage in Liters Vs Time',
+                    'lineWidth': 3,
+                    'pointSize': 10,
+                    'colors': ['#35a9ad'],
+                    'vAxis' : {'title': 'Water in Liters'},
+                    //'hAxis' : {'title': 'Time'}
+                    'hAxis' :
+                       {
+//                        'viewWindow' : {
+//                            'min': new Date(2014, 11, 31, 18),
+//                            'max': new Date(2015, 0, 3, 1)
+//                        },
+                        'gridlines': {
+                            'count': -1,
+                            'units': {
+                                'days': {'format': ['MMM dd']},
+                                'hours': {'format': ['HH:mm', 'ha']},
+                            }
+                        },
+                        'minorGridlines': {
+                            'units': {
+                                'hours': {'format': ['hh:mm:ss a', 'ha']},
+                                'minutes': {'format': ['HH:mm a Z', ':mm']}
+                            }
+                        }
+                    }
+
+                }
+
+
+                //var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                var chart = new google.visualization.AreaChart(document.getElementById('curve_chart'));
+
+                chart.draw(data, options);
+//                var chart = new google.visualization.LineChart(
+//                    document.getElementById('curve_chart'));
+//
+//                chart.draw(data, options);
+//
+//                var button = document.getElementById('change');
+//                var isChanged = false;
+//
+//                button.onclick = function () {
+//                    if (!isChanged) {
+//                        options.hAxis.viewWindow.min = new Date(2015, 0, 1);
+//                        options.hAxis.viewWindow.max = new Date(2015, 0, 1, 3);
+//                        isChanged = true;
+//                    } else {
+//                        options.hAxis.viewWindow.min = new Date(2014, 11, 31, 18),
+//                            options.hAxis.viewWindow.max = new Date(2015, 0, 3, 1)
+//                        isChanged = false;
+//                    }
+//                    chart.draw(data, options);
+//                };
+         }
+            function drawGauge() {
+
+                var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Water Used', <%= percentages.Percentage %>],
+                ]);
+
+                var options = {
+                    //width: 400, height: 120,
+                    redFrom: 90, redTo: 100,
+                    yellowFrom: 75, yellowTo: 90,
+                    minorTicks: 5
+                };
+
+                var chart = new google.visualization.Gauge(document.getElementById('gauge_chart'));
+
+                chart.draw(data, options);
+
+            }
+
+        </script>
+<h2>Your Water Usage </h2>
+    <body>
+        <p><div id="curve_chart" style="width: 900px; height: 500px; margin: 30px 200px 0px;"></div>
+            <div style=" font-size: 25px;font-family: Roboto, sans-serif ;margin: 20px 500px 0px;">Water Connection : </div>
+        <div class="onoffswitch" style=" margin: -30px 710px 0px;">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" <%if(states[0].State==true){%>checked<%;}%>>
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+    </body>
+</html>

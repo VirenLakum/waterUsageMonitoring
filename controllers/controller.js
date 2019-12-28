@@ -7,7 +7,6 @@ var moment = require('moment');
 moment().format();
 
 //Connect to database
-//mongoose.connect('mongodb://admintest:admintest@ds035693.mlab.com:35693/tod0');
 mongoose.connect('mongodb://localhost:27017/waterIoT');
 
 //Create a schema - this is like a blueprint
